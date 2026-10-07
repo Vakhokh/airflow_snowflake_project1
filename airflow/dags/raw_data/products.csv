@@ -1,0 +1,9 @@
+product_id,product_name,category,price
+P1001,Laptop Pro 15,Electronics,1299.99
+P1002,Wireless Mouse,Electronics,29.99
+P1003,Mechanical Keyboard,Electronics,89.5
+P1004,Ergonomic Chair,Furniture,249.0
+P1005,Standing Desk,Furniture,450.0
+P1006,Coffee Mug,Kitchenware,12.0
+P1007,Noise-Canceling Headphones,Electronics,199.99
+P1008,Monitor 27-inch,Electronics,320.0

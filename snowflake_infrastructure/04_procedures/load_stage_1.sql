@@ -1,0 +1,24 @@
+
+CREATE OR REPLACE PROCEDURE ECOM_DWH.RAW.LOAD_STAGE_1()
+RETURNS STRING
+LANGUAGE SQL
+AS
+$$
+DECLARE
+    affected_rows INT;
+BEGIN
+    COPY INTO ECOM_DWH.RAW.RAW_USERS FROM @ECOM_DWH.RAW.INTERNAL_STAGE/users.csv;
+    affected_rows := SQLROWCOUNT;
+    INSERT INTO ECOM_DWH.AUDIT.PIPELINE_LOG (procedure_name, rows_affected) VALUES ('LOAD_STAGE_1_USERS', :affected_rows);
+
+    COPY INTO ECOM_DWH.RAW.RAW_PRODUCTS FROM @ECOM_DWH.RAW.INTERNAL_STAGE/products.csv;
+    affected_rows := SQLROWCOUNT;
+    INSERT INTO ECOM_DWH.AUDIT.PIPELINE_LOG (procedure_name, rows_affected) VALUES ('LOAD_STAGE_1_PRODUCTS', :affected_rows);
+
+    COPY INTO ECOM_DWH.RAW.RAW_ORDERS FROM @ECOM_DWH.RAW.INTERNAL_STAGE/orders.csv;
+    affected_rows := SQLROWCOUNT;
+    INSERT INTO ECOM_DWH.AUDIT.PIPELINE_LOG (procedure_name, rows_affected) VALUES ('LOAD_STAGE_1_ORDERS', :affected_rows);
+
+    RETURN 'Stage 1 Load and Audit Complete';
+END;
+$$;
