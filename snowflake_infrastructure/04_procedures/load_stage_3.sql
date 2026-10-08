@@ -9,7 +9,7 @@ BEGIN
     MERGE INTO ECOM_DWH.MART.DIM_USER t
     USING (
         SELECT user_id, full_name, email, region, registered_date
-        FROM ECOM_DWH.CLEANSED.STREAM_INT_USERS
+        FROM ECOM_DWH.CLEANED.STREAM_INT_USERS
         WHERE METADATA$ACTION = 'INSERT'
         QUALIFY ROW_NUMBER() OVER (PARTITION BY user_id ORDER BY registered_date DESC NULLS LAST) = 1
     ) s
@@ -27,7 +27,7 @@ BEGIN
     MERGE INTO ECOM_DWH.MART.DIM_PRODUCT t
     USING (
         SELECT product_id, product_name, category, price
-        FROM ECOM_DWH.CLEANSED.STREAM_INT_PRODUCTS
+        FROM ECOM_DWH.CLEANED.STREAM_INT_PRODUCTS
         WHERE METADATA$ACTION = 'INSERT'
         QUALIFY ROW_NUMBER() OVER (PARTITION BY product_id ORDER BY product_name) = 1
     ) s
@@ -43,7 +43,7 @@ BEGIN
 
     INSERT INTO ECOM_DWH.MART.FACT_ORDER (order_id, user_id, product_id, quantity, order_date, total_amount)
     SELECT order_id, user_id, product_id, quantity, order_date, total_amount
-    FROM ECOM_DWH.CLEANSED.STREAM_INT_ORDERS
+    FROM ECOM_DWH.CLEANED.STREAM_INT_ORDERS
     WHERE METADATA$ACTION = 'INSERT';
     affected_rows := SQLROWCOUNT;
     INSERT INTO ECOM_DWH.AUDIT.PIPELINE_LOG (procedure_name, rows_affected) VALUES ('LOAD_STAGE_3_FACTS', :affected_rows);
